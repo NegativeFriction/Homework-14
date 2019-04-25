@@ -27,9 +27,7 @@ app.use(express.static("public"));
 var databaseUri = "mongodb://localhost/hw14"
 
 if (process.env.MONGODB_URI){
-    mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true
-    });
+    mongoose.connect(process.env.MONGODB_URI);
     db = mongoose.connection;
     db.on('error',function(err){
         console.log("Mongoose Error: ",err)
