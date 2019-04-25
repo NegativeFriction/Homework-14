@@ -19,15 +19,26 @@ $.getJSON("/articles_with_comments",function(data){
         let newDiv = $("<div>")
         newDiv.append("<a data-id =" + id + " href = " + link + ">" + title + "</a>")
         newDiv.append("<h5>" + summary + "</h5>")
-        newDiv.append("<button onclick=window.location='/newComment/" + id + "' class='newComment'>Leave a Comment</button>")
-        if(comments){
-            newDiv.append("<button data-id='" + id + "class='commentsButton'>See Comments</button>")
-        }
+        let commentsDiv = $("<div class='comments'>")
+        commentsDiv.append("<button data-id = " + id + " class='newComment'>Leave a Comment</button>")
+        commentsDiv.append("<button data-id = " + id + " class='seeComment'>See Comments</button>")
         $("#articles-list").append(newDiv)
+        $("#articles-list").append(commentsDiv)
+        }
         } 
     }
-})
+)
 
 $(document.body).on('click', '.newComment', function() {
-    window.redirect
+    let id = $(this).attr("data-id")
+    $(this).parent().empty()
+    let commentDiv = $('<textarea id="comment">')
+    let authorDiv = $('<textarea id="author">')
+    let submitButton = $('<button class="make-new" data-id =' + id + '>Submit</button>')
+    $(this).parent().append(commentDiv)
+    $(this).parent().append(authorDiv)
+$(this).parent().append(submitButton)
+   
 });
+
+$(document.body).on("click",)

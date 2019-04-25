@@ -107,6 +107,10 @@ app.get("/comments/:id",function(req,res){
 });
 });
 
+app.post("/newComment/:id/submit",function(req,res){
+    console.log(req.body)
+})
+
 app.listen(PORT, function() {
   console.log("App running on port " + PORT + "!");
 });

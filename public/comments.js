@@ -1,4 +1,4 @@
-// When the #make-new button is clicked
+
 $(document).on("click", "#make-new", function() {
   // AJAX POST call to the submit route on the server
   // This will take the data from the form and send it to the server
@@ -11,11 +11,7 @@ $(document).on("click", "#make-new", function() {
       body: $("#comment").val(),
       articleID: getID()
     }
-  })
-
-
-  // If that API call succeeds, add the title and a delete button for the note to the page
-    .then(function(data) {
+  }).then(function(data) {
     location.reload();
     });
 });
