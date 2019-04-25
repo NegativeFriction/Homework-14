@@ -10,7 +10,6 @@ var ArticleSchema = new Schema({
   headline: { type: String, unique: true },
   // `body` must be of type String
   summary: String,
-  url: String,
   link: String,
   comments: [
     {

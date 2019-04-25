@@ -58,8 +58,7 @@ app.get("/articles", function(req, res) {
       //   console.log(result);
       //   }
       // Create a new Article using the `result` object built from scraping
-      db.article
-        .create(result)
+      db.Article.create(result)
         .then(function(dbArticle) {
           // View the added result in the console
           console.log(dbArticle);
