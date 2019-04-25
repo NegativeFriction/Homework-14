@@ -3,6 +3,8 @@ var logger = require("morgan");
 var mongoose = require("mongoose");
 var axios = require("axios");
 var cheerio = require("cheerio");
+var path = require("path");
+var mongo = require('mongojs')
 
 var PORT = 3000;
 
@@ -23,6 +25,17 @@ app.use(express.static("public"));
 
 // Connect to the Mongo DB
 mongoose.connect("mongodb://localhost/hw14", { useNewUrlParser: true });
+
+
+app.get("/", function(req, res) {
+  res.sendFile(path.join(__dirname, "./public/index.html"));
+});
+
+app.get("/newComment/:id",function(req,res){
+    let id = req.params.id;
+        
+        res.sendFile(path.join(__dirname, "./public/comments.html"));
+    })
 
 app.get("/articles", function(req, res) {
   // First, we grab the body of the html with axios
@@ -49,24 +62,27 @@ app.get("/articles", function(req, res) {
         .trim();
 
       result.link = $(this)
-        .children("a")
+        .children(".block-link__overlay-link")
         .attr("href");
 
       result.comments = [];
 
-      //   if (result.link != undefined && result.summary != "") {
-      //   console.log(result);
-      //   }
-      // Create a new Article using the `result` object built from scraping
-      db.Article.create(result)
-        .then(function(dbArticle) {
-          // View the added result in the console
-          console.log(dbArticle);
-        })
-        .catch(function(err) {
-          // If an error occurred, log it
-          console.log(err);
-        });
+      db.Article.find({ headline: result.headline }, function(err, data) {
+        if (err) throw err;
+        if (!data) {
+        //   console.log("New article found");
+          // Create a new Article using the `result` object built from scraping
+          db.Article.create(result)
+            .then(function(dbArticle) {
+              // View the added result in the console
+              console.log(dbArticle);
+            })
+            .catch(function(err) {
+              // If an error occurred, log it
+              console.log(err);
+            });
+        }
+      });
     });
     console.log("done scraping");
 
@@ -74,6 +90,23 @@ app.get("/articles", function(req, res) {
     res.send("Scrape Complete");
   });
 });
+
+app.get("/articles_with_comments",function(req,res){
+    db.Article.find({},function(err,data){
+        if(err) throw err;
+        
+        res.json(data)
+    })
+})
+
+app.get("/comments/:id",function(req,res){
+    let id = req.params.id;
+    db.Article.find({_id:mongojs.ObjectId(id) },function(err,data){
+        if(err) throw err;
+        res.json(data)
+});
+});
+
 app.listen(PORT, function() {
   console.log("App running on port " + PORT + "!");
 });
