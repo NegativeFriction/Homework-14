@@ -23,8 +23,24 @@ app.use(express.json());
 // Make public a static folder
 app.use(express.static("public"));
 
-// Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/hw14", { useNewUrlParser: true });
+
+var databaseUri = "mongodb://localhost/hw14"
+
+if (process.env.MONGODB_URI){
+    mongoose.connect(process.env.MONGODB_URI);
+    db = mongoose.connection;
+    db.on('error',function(err){
+        console.log("Mongoose Error: ",err)
+    })
+    db.once("open",function(){
+        console.log("Mongoose connection succesful.")
+    })
+}
+    else{
+        mongoose.connect(databaseUri, {
+  useNewUrlParser: true
+    })
+}
 
 
 app.get("/", function(req, res) {
